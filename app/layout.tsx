@@ -15,9 +15,85 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://www.tripadvert.com";
+
 export const metadata: Metadata = {
-  title: "TripAdverts",
-  description: "Advertise your business directly to passengers with our in-vehicle digital displays.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "TripAdverts — In-Vehicle Digital Advertising Platform in Accra, Ghana",
+    template: "%s | TripAdverts",
+  },
+  description:
+    "TripAdverts is Accra's leading digital out-of-home (DOOH) advertising platform. Reach thousands of passengers daily through headrest-mounted tablet displays in taxis and ride-share vehicles across Ghana.",
+  keywords: [
+    "digital advertising Accra",
+    "DOOH advertising Ghana",
+    "in-vehicle advertising",
+    "headrest advertising",
+    "taxi advertising Accra",
+    "ride-share advertising Ghana",
+    "digital out-of-home advertising",
+    "in-cab advertising platform",
+    "TripAdverts",
+    "passenger advertising Ghana",
+    "fleet advertising network",
+    "tablet advertising taxis",
+    "transit advertising Accra Ghana",
+    "outdoor advertising Ghana",
+  ],
+  authors: [{ name: "TripAdverts", url: siteUrl }],
+  creator: "TripAdverts",
+  publisher: "TripAdverts",
+  formatDetection: {
+    email: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_GH",
+    url: siteUrl,
+    siteName: "TripAdverts",
+    title: "TripAdverts — In-Vehicle Digital Advertising Platform in Accra, Ghana",
+    description:
+      "Reach thousands of passengers daily through headrest-mounted tablet displays in taxis and ride-share vehicles across Accra, Ghana. Launch targeted DOOH campaigns in minutes.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "TripAdverts — Digital advertising on headrest-mounted tablets in taxis across Accra, Ghana",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TripAdverts — In-Vehicle Digital Advertising in Accra, Ghana",
+    description:
+      "Reach thousands of passengers daily through headrest-mounted tablet displays in taxis across Ghana. Launch DOOH campaigns in minutes.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  category: "Advertising",
+  manifest: "/manifest.json",
+  other: {
+    "geo.region": "GH-AA",
+    "geo.placename": "Accra",
+    "geo.position": "5.6037;-0.1870",
+    ICBM: "5.6037, -0.1870",
+  },
 };
 
 export default function RootLayout({
