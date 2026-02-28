@@ -1,0 +1,16 @@
+{
+  "name": "TripAdvert — In-Vehicle Digital Advertising Platform",
+  "short_name": "TripAdvert",
+  "description": "Reach passengers daily through headrest-mounted tablet displays in taxis across Accra, Ghana.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
