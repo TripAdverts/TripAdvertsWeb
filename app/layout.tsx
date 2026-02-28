@@ -20,11 +20,11 @@ const siteUrl = "https://www.tripadvert.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "TripAdvert — In-Vehicle Digital Advertising Platform in Accra, Ghana",
-    template: "%s | TripAdvert",
+    default: "TripAdverts — In-Vehicle Digital Advertising Platform in Accra, Ghana",
+    template: "%s | TripAdverts",
   },
   description:
-    "TripAdvert is Accra's leading digital out-of-home (DOOH) advertising platform. Reach thousands of passengers daily through headrest-mounted tablet displays in taxis and ride-share vehicles across Ghana.",
+    "TripAdverts is Accra's leading digital out-of-home (DOOH) advertising platform. Reach thousands of passengers daily through headrest-mounted tablet displays in taxis and ride-share vehicles across Ghana.",
   keywords: [
     "digital advertising Accra",
     "DOOH advertising Ghana",
@@ -34,16 +34,16 @@ export const metadata: Metadata = {
     "ride-share advertising Ghana",
     "digital out-of-home advertising",
     "in-cab advertising platform",
-    "TripAdvert",
+    "TripAdverts",
     "passenger advertising Ghana",
     "fleet advertising network",
     "tablet advertising taxis",
     "transit advertising Accra Ghana",
     "outdoor advertising Ghana",
   ],
-  authors: [{ name: "TripAdvert", url: siteUrl }],
-  creator: "TripAdvert",
-  publisher: "TripAdvert",
+  authors: [{ name: "TripAdverts", url: siteUrl }],
+  creator: "TripAdverts",
+  publisher: "TripAdverts",
   formatDetection: {
     email: false,
     telephone: false,
@@ -55,8 +55,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GH",
     url: siteUrl,
-    siteName: "TripAdvert",
-    title: "TripAdvert — In-Vehicle Digital Advertising Platform in Accra, Ghana",
+    siteName: "TripAdverts",
+    title: "TripAdverts — In-Vehicle Digital Advertising Platform in Accra, Ghana",
     description:
       "Reach thousands of passengers daily through headrest-mounted tablet displays in taxis and ride-share vehicles across Accra, Ghana. Launch targeted DOOH campaigns in minutes.",
     images: [
@@ -64,13 +64,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "TripAdvert — Digital advertising on headrest-mounted tablets in taxis across Accra, Ghana",
+        alt: "TripAdverts — Digital advertising on headrest-mounted tablets in taxis across Accra, Ghana",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TripAdvert — In-Vehicle Digital Advertising in Accra, Ghana",
+    title: "TripAdverts — In-Vehicle Digital Advertising in Accra, Ghana",
     description:
       "Reach thousands of passengers daily through headrest-mounted tablet displays in taxis across Ghana. Launch DOOH campaigns in minutes.",
     images: ["/og-image.png"],

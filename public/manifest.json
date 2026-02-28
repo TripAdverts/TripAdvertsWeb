@@ -1,6 +1,6 @@
 {
-  "name": "TripAdvert — In-Vehicle Digital Advertising Platform",
-  "short_name": "TripAdvert",
+  "name": "TripAdverts — In-Vehicle Digital Advertising Platform",
+  "short_name": "TripAdverts",
   "description": "Reach passengers daily through headrest-mounted tablet displays in taxis across Accra, Ghana.",
   "start_url": "/",
   "display": "standalone",
