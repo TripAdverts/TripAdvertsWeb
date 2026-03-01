@@ -8,8 +8,8 @@ export default function HeroCanvas({ children }: { children?: React.ReactNode })
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   // Create an array of image paths for the 10 frames
-  const framePaths = Array.from({ length: 10 }, (_, i) => 
-    `/frames/Video1_${String(i + 1).padStart(3, '0')}.png`
+  const framePaths = Array.from({ length: 10 }, (_, i) =>
+    `/frames/Video1_${String(i + 1).padStart(3, '0')}.jpg`
   );
 
   const { scrollYProgress } = useScroll({

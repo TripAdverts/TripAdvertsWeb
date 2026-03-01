@@ -40,6 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-
-/public/frames
+/public/frames  
 /about-us.txt
