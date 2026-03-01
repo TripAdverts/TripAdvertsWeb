@@ -3,14 +3,14 @@
 import { useEffect, useRef } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 
+import frameUrls from "@/lib/frames.json";
+
 export default function HeroCanvas({ children }: { children?: React.ReactNode }) {
   const containerRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
-  // Create an array of image paths for the 10 frames
-  const framePaths = Array.from({ length: 10 }, (_, i) =>
-    `/frames/Video1_${String(i + 1).padStart(3, '0')}.jpg`
-  );
+  // Create an array of image paths for the 10 frames from Vercel Blob storage
+  const framePaths = frameUrls;
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
