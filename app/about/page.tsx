@@ -2,14 +2,56 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About TripAdverts — In-Vehicle Digital Advertising in Accra",
   description:
     "Learn about TripAdverts — Accra's leading digital out-of-home advertising platform delivering targeted ads on headrest-mounted tablet displays in taxis and ride-share vehicles across Ghana.",
+  alternates: {
+    canonical: "/about",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": "https://www.tripadverts.com/about#webpage",
+      url: "https://www.tripadverts.com/about",
+      name: "About TripAdverts",
+      isPartOf: { "@id": "https://www.tripadverts.com/#website" },
+      inLanguage: "en",
+      dateModified: "2026-03-01",
+      description:
+        "Learn about TripAdverts — Accra's leading digital out-of-home advertising platform delivering targeted ads on headrest-mounted tablet displays in taxis and ride-share vehicles across Ghana.",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.tripadverts.com/about#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.tripadverts.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "About",
+          item: "https://www.tripadverts.com/about",
+        },
+      ],
+    },
+  ],
 };
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900 selection:bg-teal-500/30">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Header */}
       <header className="border-b border-slate-200 px-6 py-5">
         <div className="mx-auto max-w-4xl flex items-center justify-between">

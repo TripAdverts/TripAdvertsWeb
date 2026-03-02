@@ -5,11 +5,53 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "Learn how TripAdverts collects, uses, and protects your personal information across our digital out-of-home advertising platform in Accra, Ghana.",
+  alternates: {
+    canonical: "/privacy",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.tripadverts.com/privacy#webpage",
+      url: "https://www.tripadverts.com/privacy",
+      name: "Privacy Policy",
+      isPartOf: { "@id": "https://www.tripadverts.com/#website" },
+      inLanguage: "en",
+      dateModified: "2026-03-01",
+      description:
+        "Learn how TripAdverts collects, uses, and protects your personal information across our digital out-of-home advertising platform in Accra, Ghana.",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.tripadverts.com/privacy#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.tripadverts.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Privacy Policy",
+          item: "https://www.tripadverts.com/privacy",
+        },
+      ],
+    },
+  ],
 };
 
 export default function PrivacyPolicyPage() {
   return (
     <main className="bg-white text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-20">
         <header className="mb-12">
           <Link

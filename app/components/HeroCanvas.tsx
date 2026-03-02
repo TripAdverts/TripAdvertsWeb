@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 
 import frameUrls from "@/lib/frames.json";
 
@@ -24,11 +24,28 @@ export default function HeroCanvas({ children }: { children?: React.ReactNode })
   const images = useRef<HTMLImageElement[]>([]);
 
   useEffect(() => {
-    framePaths.forEach((path, i) => {
-      const img = new Image();
-      img.src = path;
-      images.current[i] = img;
-    });
+    // Eagerly load first frame for fast LCP
+    const first = new Image();
+    first.src = framePaths[0];
+    images.current[0] = first;
+    // Lazy-load remaining frames after idle
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(() => {
+        framePaths.slice(1).forEach((path, i) => {
+          const img = new Image();
+          img.src = path;
+          images.current[i + 1] = img;
+        });
+      });
+    } else {
+      setTimeout(() => {
+        framePaths.slice(1).forEach((path, i) => {
+          const img = new Image();
+          img.src = path;
+          images.current[i + 1] = img;
+        });
+      }, 200);
+    }
   }, []); // Run once on mount
 
   useEffect(() => {
@@ -83,14 +100,18 @@ export default function HeroCanvas({ children }: { children?: React.ReactNode })
         }
       });
 
-      // Handle resize
+      // Handle resize with debounce via requestAnimationFrame
+      let resizeRaf = 0;
       const handleResize = () => {
-        updateCanvasSize();
-        const index = Math.min(9, Math.max(0, Math.floor(frameIndex.get())));
-        const img = images.current[index];
-        if (img && img.complete) {
-          drawImageCover(img);
-        }
+        cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+          updateCanvasSize();
+          const index = Math.min(9, Math.max(0, Math.floor(frameIndex.get())));
+          const img = images.current[index];
+          if (img && img.complete) {
+            drawImageCover(img);
+          }
+        });
       };
 
       window.addEventListener("resize", handleResize);
@@ -111,8 +132,8 @@ export default function HeroCanvas({ children }: { children?: React.ReactNode })
           </div>
         </div>
         <div className="hidden md:block md:w-1/2 h-full bg-slate-950" />
-        <div className="relative w-full h-full md:w-1/2 flex-shrink-0 z-0">
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-40 md:opacity-80 mix-blend-screen" />
+        <div className="hidden md:block relative h-full md:w-1/2 flex-shrink-0 z-0">
+          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-80 mix-blend-screen" />
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent hidden md:block" />
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#020617] to-transparent pointer-events-none" />
         </div>

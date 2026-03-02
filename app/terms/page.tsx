@@ -5,11 +5,53 @@ export const metadata: Metadata = {
   title: "Terms of Service",
   description:
     "Read the Terms of Service governing the use of TripAdverts, a digital out-of-home advertising platform operating in Accra, Ghana.",
+  alternates: {
+    canonical: "/terms",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.tripadverts.com/terms#webpage",
+      url: "https://www.tripadverts.com/terms",
+      name: "Terms of Service",
+      isPartOf: { "@id": "https://www.tripadverts.com/#website" },
+      inLanguage: "en",
+      dateModified: "2026-03-01",
+      description:
+        "Read the Terms of Service governing the use of TripAdverts, a digital out-of-home advertising platform operating in Accra, Ghana.",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.tripadverts.com/terms#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.tripadverts.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Terms of Service",
+          item: "https://www.tripadverts.com/terms",
+        },
+      ],
+    },
+  ],
 };
 
 export default function TermsOfServicePage() {
   return (
     <main className="bg-white text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-20">
         <header className="mb-12">
           <Link

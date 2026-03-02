@@ -8,11 +8,13 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "optional",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "optional",
 });
 
 const siteUrl = "https://www.tripadverts.com";
@@ -51,6 +53,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // Note: Sub-pages must override this canonical in their own metadata
   openGraph: {
     type: "website",
     locale: "en_GH",

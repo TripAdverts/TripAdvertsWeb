@@ -1,4 +1,6 @@
+import Link from "next/link";
 import HeroCanvas from "./components/HeroCanvas";
+import MobileNav from "./components/MobileNav";
 import { MapPin, Eye, BarChart3 } from "lucide-react";
 
 const jsonLd = {
@@ -43,6 +45,7 @@ const jsonLd = {
       "@id": "https://www.tripadverts.com/#website",
       url: "https://www.tripadverts.com",
       name: "TripAdverts",
+      inLanguage: "en",
       publisher: { "@id": "https://www.tripadverts.com/#organization" },
     },
     {
@@ -52,20 +55,11 @@ const jsonLd = {
       name: "TripAdverts — In-Vehicle Digital Ads in Accra, Ghana",
       isPartOf: { "@id": "https://www.tripadverts.com/#website" },
       about: { "@id": "https://www.tripadverts.com/#organization" },
+      inLanguage: "en",
+      datePublished: "2025-01-01",
+      dateModified: "2026-03-01",
       description:
         "Reach thousands of passengers daily through headrest-mounted tablet displays in taxis and ride-share vehicles across Accra, Ghana.",
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": "https://www.tripadverts.com/#breadcrumb",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.tripadverts.com",
-        },
-      ],
     },
     {
       "@type": "Service",
@@ -110,9 +104,25 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      {/* Navigation Header */}
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-6 py-4">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <Link href="/" className="text-xl font-bold tracking-tighter text-slate-900">
+            TripAdverts<span className="text-teal-500">.</span>
+          </Link>
+          <nav className="hidden sm:flex items-center gap-6 text-sm text-slate-500">
+            <a href="#features" className="hover:text-teal-600 transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-teal-600 transition-colors">How It Works</a>
+            <Link href="/about" className="hover:text-teal-600 transition-colors">About</Link>
+            <a href="#contact" className="rounded-full bg-teal-500 px-5 py-2 text-sm font-semibold text-white hover:bg-teal-400 transition-colors">Contact</a>
+          </nav>
+          <MobileNav />
+        </div>
+      </header>
+
       {/* Hero Section Container for Scroll Animation */}
       <HeroCanvas>
-        <div className="flex flex-col items-center md:items-start justify-center text-center md:text-left px-6 py-12 lg:px-20 h-full bg-slate-950/60 md:bg-transparent">
+        <div className="flex flex-col items-center md:items-start justify-center text-center md:text-left px-6 py-12 lg:px-20 h-full bg-transparent">
           <h1 className="max-w-xl text-4xl font-extrabold tracking-tight text-white sm:text-7xl drop-shadow-2xl">
             In-Vehicle Digital Advertising <br className="hidden sm:block" />
             <span className="text-teal-400">in Accra, Ghana.</span>
@@ -128,8 +138,17 @@ export default function Home() {
         </div>
       </HeroCanvas>
 
+      {/* What is TripAdverts */}
+      <section aria-label="What is TripAdverts" className="bg-white py-14 sm:py-20 px-6 z-20 relative">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-base sm:text-lg text-slate-500 leading-relaxed">
+            <strong className="text-slate-900">TripAdverts</strong> is a digital out-of-home (DOOH) advertising platform based in Accra, Ghana. We install high-definition tablet displays on headrests inside taxis and ride-share vehicles, turning every passenger journey into a premium advertising opportunity. Our self-serve platform lets advertisers create campaigns, set geofenced delivery zones across Accra&apos;s neighbourhoods, and track verified impressions in real time. For fleet partners and drivers, TripAdverts provides a hands-free source of supplementary income on every ride.
+          </p>
+        </div>
+      </section>
+
       {/* Social Proof */}
-      <section aria-label="Trusted partners" className="bg-white py-12 sm:py-20 px-6 z-20 relative">
+      <section aria-label="Trusted partners" className="bg-white py-12 sm:py-20 px-6 z-20 relative border-t border-slate-100">
         <div className="mx-auto max-w-7xl text-center">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
             Trusted by innovative businesses across Ghana
@@ -317,7 +336,7 @@ export default function Home() {
           <div className="mt-10 grid gap-6 sm:grid-cols-3 text-center">
             <div className="flex flex-col items-center p-6 rounded-2xl bg-white border border-slate-200">
               <span className="text-sm font-medium text-slate-400 mb-2">Email</span>
-              <a href="mailto:hello@tripadverts.com" className="text-teal-600 font-medium hover:text-teal-500 transition-colors">hello@tripadverts.com</a>
+              <a href="mailto:hello@tripadverts.com" className="inline-flex items-center min-h-[48px] text-teal-600 font-medium hover:text-teal-500 transition-colors">hello@tripadverts.com</a>
             </div>
             <div className="flex flex-col items-center p-6 rounded-2xl bg-white border border-slate-200">
               <span className="text-sm font-medium text-slate-400 mb-2">Location</span>
@@ -325,7 +344,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col items-center p-6 rounded-2xl bg-white border border-slate-200">
               <span className="text-sm font-medium text-slate-400 mb-2">Fleet Partnerships</span>
-              <a href="mailto:fleet@tripadverts.com" className="text-teal-600 font-medium hover:text-teal-500 transition-colors">fleet@tripadverts.com</a>
+              <a href="mailto:fleet@tripadverts.com" className="inline-flex items-center min-h-[48px] text-teal-600 font-medium hover:text-teal-500 transition-colors">fleet@tripadverts.com</a>
             </div>
           </div>
         </div>
@@ -340,20 +359,20 @@ export default function Home() {
               Accra&apos;s leading in-vehicle digital advertising platform.
             </p>
           </div>
-          <nav className="flex flex-wrap gap-5 sm:gap-8 text-sm text-slate-500">
-            <a href="#features" className="hover:text-teal-600 transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-teal-600 transition-colors">How It Works</a>
-            <a href="#partner" className="hover:text-teal-600 transition-colors">Fleet Partners</a>
-            <a href="/about" className="hover:text-teal-600 transition-colors">About</a>
-            <a href="#contact" className="hover:text-teal-600 transition-colors">Contact</a>
+          <nav className="flex flex-wrap gap-2 sm:gap-4 text-sm text-slate-500">
+            <a href="#features" className="inline-flex items-center min-h-[48px] px-2 hover:text-teal-600 transition-colors">Features</a>
+            <a href="#how-it-works" className="inline-flex items-center min-h-[48px] px-2 hover:text-teal-600 transition-colors">How It Works</a>
+            <a href="#partner" className="inline-flex items-center min-h-[48px] px-2 hover:text-teal-600 transition-colors">Fleet Partners</a>
+            <a href="/about" className="inline-flex items-center min-h-[48px] px-2 hover:text-teal-600 transition-colors">About</a>
+            <a href="#contact" className="inline-flex items-center min-h-[48px] px-2 hover:text-teal-600 transition-colors">Contact</a>
           </nav>
         </div>
         <div className="mx-auto max-w-7xl mt-8 pt-6 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400">
           <p>© {new Date().getFullYear()} TripAdverts Inc. All rights reserved.</p>
-          <div className="flex gap-6 mt-4 md:mt-0">
-            <a href="/privacy" className="hover:text-slate-600 transition-colors">Privacy</a>
-            <a href="/terms" className="hover:text-slate-600 transition-colors">Terms</a>
-            <a href="/cookies" className="hover:text-slate-600 transition-colors">Cookies</a>
+          <div className="flex gap-2 mt-4 md:mt-0">
+            <a href="/privacy" className="inline-flex items-center min-h-[48px] px-2 hover:text-slate-600 transition-colors">Privacy</a>
+            <a href="/terms" className="inline-flex items-center min-h-[48px] px-2 hover:text-slate-600 transition-colors">Terms</a>
+            <a href="/cookies" className="inline-flex items-center min-h-[48px] px-2 hover:text-slate-600 transition-colors">Cookies</a>
           </div>
         </div>
       </footer>

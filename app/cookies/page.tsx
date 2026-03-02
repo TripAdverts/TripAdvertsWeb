@@ -5,11 +5,53 @@ export const metadata: Metadata = {
   title: "Cookie Policy",
   description:
     "Understand how TripAdverts uses cookies and similar technologies on our website and advertiser platform.",
+  alternates: {
+    canonical: "/cookies",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.tripadverts.com/cookies#webpage",
+      url: "https://www.tripadverts.com/cookies",
+      name: "Cookie Policy",
+      isPartOf: { "@id": "https://www.tripadverts.com/#website" },
+      inLanguage: "en",
+      dateModified: "2026-03-01",
+      description:
+        "Understand how TripAdverts uses cookies and similar technologies on our website and advertiser platform.",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.tripadverts.com/cookies#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.tripadverts.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Cookie Policy",
+          item: "https://www.tripadverts.com/cookies",
+        },
+      ],
+    },
+  ],
 };
 
 export default function CookiePolicyPage() {
   return (
     <main className="bg-white text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-20">
         <header className="mb-12">
           <Link
