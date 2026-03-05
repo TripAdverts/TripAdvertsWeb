@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar";
 import { MapPin, Eye, BarChart3, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import AccraMap from "./components/AccraMap";
+import AdLayoutSwitcher from "./components/AdLayoutSwitcher";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -186,7 +187,7 @@ export default function Home() {
             </div>
             
             {/* Top Text Content */}
-            <div className="relative z-10 w-full p-8 sm:p-12 md:p-16 flex flex-col gap-2 pointer-events-none">
+            <div className="relative z-10 w-full pt-2 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 px-8 sm:px-12 md:px-16 flex flex-col gap-2 pointer-events-none -translate-y-[3px]">
               <h3 className="text-white font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-5xl tracking-tight">No more.</h3>
             </div>
           </div>
@@ -195,7 +196,7 @@ export default function Home() {
           <div className="relative w-[85vw] sm:w-[70vw] md:w-[60vw] xl:w-[1000px] aspect-[4/5] sm:aspect-video flex-shrink-0 snap-center rounded-[2rem] sm:rounded-[3rem] bg-[#000000] overflow-hidden group hover:scale-[1.01] transition-transform duration-500 shadow-2xl flex flex-col items-center justify-end pb-8 sm:pb-0">
             
             {/* Top Text Content (Absolute positioned top-left as in reference) */}
-            <div className="absolute top-0 left-0 z-10 w-full p-8 sm:p-12 md:p-16 flex flex-col pointer-events-none">
+            <div className="absolute top-0 left-0 z-10 w-full pt-2 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 px-8 sm:px-12 md:px-16 flex flex-col pointer-events-none -translate-y-[3px]">
               <h3 className="text-[#f5f5f7] font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-5xl tracking-tight">Screen is your's.</h3>
             </div>
 
@@ -218,15 +219,14 @@ export default function Home() {
           </div>
 
           {/* Max Tier Content Card */}
-          <div className="relative w-[85vw] sm:w-[70vw] md:w-[60vw] xl:w-[1000px] aspect-[4/5] sm:aspect-video flex-shrink-0 snap-center rounded-[2rem] sm:rounded-[3rem] bg-[#111113] overflow-hidden group hover:scale-[1.01] transition-transform duration-500 shadow-2xl">
-            {/* Media Placeholder Background */}
-            <div className="absolute inset-0 bg-[#2d2d31] flex items-center justify-center opacity-40">
-              <span className="text-[#a1a1a6] font-medium tracking-widest uppercase text-xs sm:text-sm md:text-base">Video / Image Placeholder</span>
-            </div>
-            
+          <div className="relative w-[85vw] sm:w-[70vw] md:w-[60vw] xl:w-[1000px] aspect-[4/5] sm:aspect-video flex-shrink-0 snap-center rounded-[2rem] sm:rounded-[3rem] bg-[#111113] overflow-hidden group hover:scale-[1.01] transition-transform duration-500 shadow-2xl flex flex-col">
             {/* Top Text Content */}
-            <div className="relative z-10 w-full p-8 sm:p-12 md:p-16 flex flex-col gap-2 pointer-events-none">
-              <h3 className="text-[#f5f5f7] font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-5xl tracking-tight">Interactive Campaigns.</h3>
+            <div className="relative z-10 w-full pt-2 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 px-8 sm:px-12 md:px-16 flex flex-col gap-2 pointer-events-none shrink-0 -translate-y-[3px]">
+              <h3 className="text-[#f5f5f7] font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-5xl tracking-tight">Choose your layout.</h3>
+            </div>
+            {/* Interactive Layout Switcher */}
+            <div className="flex-1 min-h-0">
+              <AdLayoutSwitcher />
             </div>
           </div>
 
