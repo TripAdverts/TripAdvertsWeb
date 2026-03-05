@@ -151,17 +151,15 @@ export default function AdLayoutSwitcher() {
 
   return (
     <div 
-      className="w-full h-[85%] flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 gap-6 sm:gap-8 mt-auto mb-4"
+      className="w-full h-full flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 mt-4 sm:mt-0"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Layout preview */}
-      <div className="w-[90%] sm:w-[85%] md:w-[75%] max-w-2xl aspect-[16/10] sm:aspect-video bg-[#1a1a1c] rounded-xl sm:rounded-2xl overflow-hidden border border-white/5 shadow-2xl relative flex shrink-0">
+      <div className="w-[98%] sm:w-[85%] md:w-[75%] max-w-2xl aspect-[4/3] sm:aspect-video bg-[#1a1a1c] rounded-xl sm:rounded-2xl overflow-hidden border border-white/5 shadow-2xl relative flex shrink-0">
         {/* Dynamic Layout Animates its internal components */}
         <DynamicLayout active={active} />
       </div>
-
-
     </div>
   );
 }
