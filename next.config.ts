@@ -1,7 +1,22 @@
 import type { NextConfig } from "next";
 
+const bucketUrl = process.env.NEXT_PUBLIC_BUCKET_URL ?? "";
+const bucketHost = bucketUrl ? new URL(bucketUrl).hostname : "";
+
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: bucketHost
+      ? [{ protocol: "https", hostname: bucketHost }]
+      : [],
+  },
   async headers() {
+    const imgSrc = bucketUrl
+      ? `img-src 'self' data: https: blob: ${bucketUrl};`
+      : "img-src 'self' data: https: blob:;";
+    const connectSrc = bucketUrl
+      ? `connect-src 'self' ${bucketUrl};`
+      : "connect-src 'self';";
+
     return [
       {
         source: "/(.*)",
@@ -24,8 +39,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.public.blob.vercel-storage.com;",
+            value: `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; ${imgSrc} font-src 'self' https://fonts.gstatic.com; ${connectSrc}`,
           },
         ],
       },
