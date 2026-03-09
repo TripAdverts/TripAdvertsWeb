@@ -37,6 +37,18 @@ const agreementSchema = z.boolean().refine((value) => value, {
   message: "You must confirm the declaration",
 });
 
+const normalizedRequiredString = (message: string) =>
+  z.preprocess(
+    (value) => (typeof value === "string" ? value : ""),
+    z.string().trim().min(1, message),
+  );
+
+const normalizedOptionalString = () =>
+  z.preprocess(
+    (value) => (typeof value === "string" ? value : ""),
+    z.string().trim(),
+  );
+
 const step1Schema = z.object({
   country: countrySchema,
   accountType: accountTypeSchema,
@@ -171,12 +183,82 @@ const step4Schema = z
     }
   });
 
+const bankRoutingNumberSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{9}$/, "Routing number must be 9 digits");
+
+const bankSortCodeSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{2}-?\d{2}-?\d{2}$/, "Enter a valid sort code");
+
+const step5Schema = z
+  .object({
+    country: countrySchema,
+    bankName: normalizedRequiredString("Bank name is required"),
+    bankAccountName: normalizedRequiredString("Account holder name is required"),
+    bankAccountNumber: normalizedRequiredString("Account number is required"),
+    bankRoutingNumber: normalizedOptionalString(),
+    bankSortCode: normalizedOptionalString(),
+  })
+  .superRefine((values, ctx) => {
+    if (values.country === "United States") {
+      const routingNumber = values.bankRoutingNumber?.trim() ?? "";
+
+      if (!routingNumber) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["bankRoutingNumber"],
+          message: "Routing number is required",
+        });
+        return;
+      }
+
+      if (!bankRoutingNumberSchema.safeParse(routingNumber).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["bankRoutingNumber"],
+          message: "Routing number must be 9 digits",
+        });
+      }
+    }
+
+    if (values.country === "United Kingdom") {
+      const sortCode = values.bankSortCode?.trim() ?? "";
+
+      if (!sortCode) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["bankSortCode"],
+          message: "Sort code is required",
+        });
+        return;
+      }
+
+      if (!bankSortCodeSchema.safeParse(sortCode).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["bankSortCode"],
+          message: "Enter a valid sort code",
+        });
+      }
+    }
+  });
+
 const registerSchema = step1Schema
   .merge(step2Schema)
   .merge(step3Schema)
-  .merge(step4Schema);
+  .merge(step4Schema)
+  .merge(step5Schema);
 
-const stepSchemas = [step1Schema, step2Schema, step3Schema, step4Schema];
+const stepSchemas = [
+  step1Schema,
+  step2Schema,
+  step3Schema,
+  step4Schema,
+  step5Schema,
+];
 
 type Owner = z.infer<typeof ownerSchema>;
 type RegisterFormValues = z.input<typeof registerSchema>;
@@ -192,5 +274,6 @@ export {
   step2Schema,
   step3Schema,
   step4Schema,
+  step5Schema,
 };
 export type { Owner, RegisterFormData, RegisterFormValues };

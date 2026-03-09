@@ -11,10 +11,12 @@ import {
   step2Schema,
   step3Schema,
   step4Schema,
+  step5Schema,
   type RegisterFormData,
   type RegisterFormValues,
 } from "@/lib/schemas";
 import { AccountSetupStep } from "./components/AccountSetupStep";
+import { BankingStep } from "./components/BankingStep";
 import { BusinessKybStep } from "./components/BusinessKybStep";
 import { DirectorsOwnersStep } from "./components/DirectorsOwnersStep";
 import { IdentityVerificationStep } from "./components/IdentityVerificationStep";
@@ -31,11 +33,12 @@ type RegisterStepDefinition = {
     | typeof step1Schema
     | typeof step2Schema
     | typeof step3Schema
-    | typeof step4Schema;
+    | typeof step4Schema
+    | typeof step5Schema;
   title: string;
 };
 
-const allSteps: readonly RegisterStepDefinition[] = [
+const baseSteps: readonly RegisterStepDefinition[] = [
   {
     title: "Account Setup",
     schema: step1Schema,
@@ -46,6 +49,9 @@ const allSteps: readonly RegisterStepDefinition[] = [
     schema: step2Schema,
     Component: IdentityVerificationStep,
   },
+];
+
+const businessOnlySteps: readonly RegisterStepDefinition[] = [
   {
     title: "Business Information (KYB)",
     schema: step3Schema,
@@ -58,8 +64,18 @@ const allSteps: readonly RegisterStepDefinition[] = [
   },
 ];
 
+const sharedFinalSteps: readonly RegisterStepDefinition[] = [
+  {
+    title: "Banking",
+    schema: step5Schema,
+    Component: BankingStep,
+  },
+];
+
 function getActiveSteps(accountType?: AccountTypeOption | string) {
-  return accountType === accountTypeOptions[1] ? allSteps : allSteps.slice(0, 2);
+  return accountType === accountTypeOptions[1]
+    ? [...baseSteps, ...businessOnlySteps, ...sharedFinalSteps]
+    : [...baseSteps, ...sharedFinalSteps];
 }
 
 export default function RegisterPage() {

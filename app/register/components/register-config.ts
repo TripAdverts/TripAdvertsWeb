@@ -33,6 +33,24 @@ export type BusinessFieldConfig = {
   vatPlaceholder?: string;
 };
 
+export type BankingFieldConfig = {
+  accountNameLabel: string;
+  accountNamePlaceholder: string;
+  accountNumberPlaceholder: string;
+  bankNamePlaceholder: string;
+  extraField?:
+    | {
+        name: "bankRoutingNumber";
+        label: string;
+        placeholder: string;
+      }
+    | {
+        name: "bankSortCode";
+        label: string;
+        placeholder: string;
+      };
+};
+
 export const incorporationStateOptions = [
   { label: "Delaware", value: "DE" },
   { label: "California", value: "CA" },
@@ -99,6 +117,46 @@ export const businessFieldConfigByCountry: Record<
   },
 };
 
+export const bankingFieldConfigByCountry: Record<
+  CountryOption,
+  BankingFieldConfig
+> = {
+  Ghana: {
+    accountNameLabel: "Account Name",
+    accountNamePlaceholder: "Registered business or legal name",
+    accountNumberPlaceholder: "Account number",
+    bankNamePlaceholder: "e.g. GCB Bank",
+  },
+  Nigeria: {
+    accountNameLabel: "Account Name",
+    accountNamePlaceholder: "Registered business or legal name",
+    accountNumberPlaceholder: "Account number",
+    bankNamePlaceholder: "e.g. GTBank",
+  },
+  "United States": {
+    accountNameLabel: "Account Holder Name",
+    accountNamePlaceholder: "Legal account holder name",
+    accountNumberPlaceholder: "Account number",
+    bankNamePlaceholder: "e.g. Chase",
+    extraField: {
+      name: "bankRoutingNumber",
+      label: "Routing Number",
+      placeholder: "9 digits",
+    },
+  },
+  "United Kingdom": {
+    accountNameLabel: "Account Holder Name",
+    accountNamePlaceholder: "Legal account holder name",
+    accountNumberPlaceholder: "Account number",
+    bankNamePlaceholder: "e.g. Monzo",
+    extraField: {
+      name: "bankSortCode",
+      label: "Sort Code",
+      placeholder: "12-34-56",
+    },
+  },
+};
+
 export function createOwnerEntry(isAuthorizedSignatory = false) {
   return {
     fullName: "",
@@ -131,5 +189,10 @@ export const registerDefaultValues: DefaultValues<RegisterFormValues> = {
   businessAddress: "",
   businessTaxId: "",
   businessVatNumber: "",
+  bankName: "",
+  bankAccountName: "",
+  bankAccountNumber: "",
+  bankRoutingNumber: "",
+  bankSortCode: "",
   owners: [createOwnerEntry(true)],
 };
