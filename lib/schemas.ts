@@ -246,11 +246,14 @@ const step5Schema = z
     }
   });
 
+const step6Schema = z.object({});
+
 const registerSchema = step1Schema
   .merge(step2Schema)
   .merge(step3Schema)
   .merge(step4Schema)
-  .merge(step5Schema);
+  .merge(step5Schema)
+  .merge(step6Schema);
 
 const stepSchemas = [
   step1Schema,
@@ -258,6 +261,7 @@ const stepSchemas = [
   step3Schema,
   step4Schema,
   step5Schema,
+  step6Schema,
 ];
 
 type Owner = z.infer<typeof ownerSchema>;
@@ -275,5 +279,6 @@ export {
   step3Schema,
   step4Schema,
   step5Schema,
+  step6Schema,
 };
 export type { Owner, RegisterFormData, RegisterFormValues };

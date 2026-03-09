@@ -12,6 +12,7 @@ import {
   step3Schema,
   step4Schema,
   step5Schema,
+  step6Schema,
   type RegisterFormData,
   type RegisterFormValues,
 } from "@/lib/schemas";
@@ -21,30 +22,36 @@ import { BusinessKybStep } from "./components/BusinessKybStep";
 import { DirectorsOwnersStep } from "./components/DirectorsOwnersStep";
 import { IdentityVerificationStep } from "./components/IdentityVerificationStep";
 import { RegisterProgress } from "./components/RegisterProgress";
+import { ReviewStep } from "./components/ReviewStep";
 import {
   registerDefaultValues,
   type AccountTypeOption,
+  type RegisterStepId,
   type RegisterStepProps,
 } from "./components/register-config";
 
 type RegisterStepDefinition = {
   Component: ComponentType<RegisterStepProps> | ComponentType<{ isValid: boolean }>;
+  id: RegisterStepId;
   schema:
     | typeof step1Schema
     | typeof step2Schema
     | typeof step3Schema
     | typeof step4Schema
-    | typeof step5Schema;
+    | typeof step5Schema
+    | typeof step6Schema;
   title: string;
 };
 
 const baseSteps: readonly RegisterStepDefinition[] = [
   {
+    id: "account-setup",
     title: "Account Setup",
     schema: step1Schema,
     Component: AccountSetupStep,
   },
   {
+    id: "identity-verification",
     title: "Identity Verification",
     schema: step2Schema,
     Component: IdentityVerificationStep,
@@ -53,11 +60,13 @@ const baseSteps: readonly RegisterStepDefinition[] = [
 
 const businessOnlySteps: readonly RegisterStepDefinition[] = [
   {
+    id: "business-kyb",
     title: "Business Information (KYB)",
     schema: step3Schema,
     Component: BusinessKybStep,
   },
   {
+    id: "directors-owners",
     title: "Directors & Owners",
     schema: step4Schema,
     Component: DirectorsOwnersStep,
@@ -66,9 +75,16 @@ const businessOnlySteps: readonly RegisterStepDefinition[] = [
 
 const sharedFinalSteps: readonly RegisterStepDefinition[] = [
   {
+    id: "banking",
     title: "Banking",
     schema: step5Schema,
     Component: BankingStep,
+  },
+  {
+    id: "review",
+    title: "Review",
+    schema: step6Schema,
+    Component: ReviewStep,
   },
 ];
 
@@ -129,6 +145,7 @@ export default function RegisterPage() {
 
   const handleNext = form.handleSubmit(() => {
     if (isLastStep) {
+      console.log("Final Registration Payload:", form.getValues());
       setSubmitted(true);
       return;
     }
@@ -139,6 +156,17 @@ export default function RegisterPage() {
   const handleBack = () => {
     setSubmitted(false);
     setStepIndex(Math.max(currentStepIndex - 1, 0));
+  };
+
+  const handleEditStep = (stepId: RegisterStepId) => {
+    const targetStepIndex = activeSteps.findIndex((step) => step.id === stepId);
+
+    if (targetStepIndex === -1) {
+      return;
+    }
+
+    setSubmitted(false);
+    setStepIndex(targetStepIndex);
   };
 
   const CurrentStepComponent = currentStep.Component;
@@ -175,6 +203,7 @@ export default function RegisterPage() {
                   isLastStep={isLastStep}
                   isValid={form.formState.isValid}
                   onBack={handleBack}
+                  onEditStep={handleEditStep}
                   submitted={submitted}
                 />
               </form>

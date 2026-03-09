@@ -14,12 +14,20 @@ export const identityDocumentUploadProps = {
 
 export type AccountTypeOption = (typeof accountTypeOptions)[number];
 export type CountryOption = (typeof countryOptions)[number];
+export type RegisterStepId =
+  | "account-setup"
+  | "identity-verification"
+  | "business-kyb"
+  | "directors-owners"
+  | "banking"
+  | "review";
 
 export type RegisterStepProps = {
   isFirstStep: boolean;
   isLastStep: boolean;
   isValid: boolean;
   onBack: () => void;
+  onEditStep?: (stepId: RegisterStepId) => void;
   submitted: boolean;
 };
 
