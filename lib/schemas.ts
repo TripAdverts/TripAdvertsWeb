@@ -8,6 +8,12 @@ const countryOptions = [
 ] as const;
 
 const accountTypeOptions = ["Individual", "Registered Business"] as const;
+const ownerRoleOptions = [
+  "Director",
+  "Shareholder",
+  "CEO",
+  "Beneficial Owner",
+] as const;
 
 const countrySchema = z
   .string()
@@ -119,16 +125,51 @@ const step3Schema = z.object({
   businessVatNumber: z.string().optional(),
 });
 
+const ownerRoleSchema = z
+  .string()
+  .min(1, "Select a role")
+  .refine(
+    (value) =>
+      ownerRoleOptions.includes(value as (typeof ownerRoleOptions)[number]),
+    "Select a role",
+  );
+
+const ownershipPercentSchema = z
+  .string()
+  .min(1, "Ownership percentage is required")
+  .refine((value) => {
+    const percentage = Number(value);
+
+    return Number.isFinite(percentage) && percentage >= 0 && percentage <= 100;
+  }, "Enter a percentage between 0 and 100");
+
 const ownerSchema = z.object({
   fullName: z.string().min(1, "Name is required"),
-  role: z.string().min(1, "Role is required"),
-  ownershipPercent: z.string().min(1, "Ownership percentage is required"),
-  idNumber: z.string().min(1, "ID number is required"),
+  nationality: z.string().min(1, "Nationality is required"),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
+  role: ownerRoleSchema,
+  ownershipPercent: ownershipPercentSchema,
+  isAuthorizedSignatory: z.boolean(),
 });
 
-const step4Schema = z.object({
-  owners: z.array(ownerSchema).min(1, "Add at least one owner"),
-});
+const step4Schema = z
+  .object({
+    owners: z.array(ownerSchema).min(1, "Add at least one owner"),
+  })
+  .superRefine((values, ctx) => {
+    const totalOwnership = values.owners.reduce(
+      (sum, owner) => sum + Number(owner.ownershipPercent || 0),
+      0,
+    );
+
+    if (totalOwnership > 100) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["owners"],
+        message: "Total ownership percentage cannot exceed 100%.",
+      });
+    }
+  });
 
 const registerSchema = step1Schema
   .merge(step2Schema)
@@ -144,6 +185,7 @@ type RegisterFormData = z.output<typeof registerSchema>;
 export {
   accountTypeOptions,
   countryOptions,
+  ownerRoleOptions,
   registerSchema,
   stepSchemas,
   step1Schema,

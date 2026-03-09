@@ -99,6 +99,17 @@ export const businessFieldConfigByCountry: Record<
   },
 };
 
+export function createOwnerEntry(isAuthorizedSignatory = false) {
+  return {
+    fullName: "",
+    nationality: "",
+    dateOfBirth: "",
+    role: "",
+    ownershipPercent: "",
+    isAuthorizedSignatory,
+  } satisfies RegisterFormValues["owners"][number];
+}
+
 export const registerDefaultValues: DefaultValues<RegisterFormValues> = {
   country: undefined,
   accountType: undefined,
@@ -120,12 +131,5 @@ export const registerDefaultValues: DefaultValues<RegisterFormValues> = {
   businessAddress: "",
   businessTaxId: "",
   businessVatNumber: "",
-  owners: [
-    {
-      fullName: "",
-      role: "",
-      ownershipPercent: "",
-      idNumber: "",
-    },
-  ],
+  owners: [createOwnerEntry(true)],
 };
