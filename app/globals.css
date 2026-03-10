@@ -131,15 +131,48 @@
 
 /* Utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
-@media (prefers-color-scheme: dark) {
-  .glass {
-    background: rgba(0, 0, 0, 0.7);
-  }
+/* Scroll reveal animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero gradient text */
+.gradient-text {
+  background: linear-gradient(180deg, #000000 40%, rgba(0, 0, 0, 0.45) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* CTA glow */
+.cta-glow {
+  box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+  transition: box-shadow 0.4s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+.cta-glow:hover {
+  box-shadow: 0 4px 24px -4px rgba(20, 184, 166, 0.35);
+}
+
+/* Section gradient transitions */
+.gradient-fade-to-black {
+  background: linear-gradient(180deg, #ffffff 0%, #000000 100%);
+}
+.gradient-fade-from-black {
+  background: linear-gradient(180deg, #000000 0%, #ffffff 100%);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
