@@ -218,6 +218,11 @@ export default function FaceTracker({
 
         setIsLoaded(true);
 
+        // Guard: getUserMedia requires a secure context (HTTPS or localhost)
+        if (typeof navigator.mediaDevices?.getUserMedia !== "function") {
+          throw Object.assign(new Error("Camera access requires HTTPS. Please access this site via https:// or localhost."), { name: "SecurityError" });
+        }
+
         // Start Webcam
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
@@ -234,7 +239,19 @@ export default function FaceTracker({
 
       } catch (err: any) {
         console.error("Failed to initialize FaceTracker:", err);
-        setError(err.message || "Failed to access camera or model.");
+
+        // Provide actionable error messages for common failure modes
+        if (err.name === "NotAllowedError") {
+          setError("Camera access was denied. Please allow camera permissions in your browser settings and reload.");
+        } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+          setError("No camera found. Please connect a camera and reload.");
+        } else if (err.name === "NotReadableError" || err.name === "TrackStartError") {
+          setError("Camera is in use by another application. Close other apps using the camera and reload.");
+        } else if (typeof navigator.mediaDevices === "undefined" || typeof navigator.mediaDevices.getUserMedia === "undefined") {
+          setError("Camera access requires HTTPS. Please access this site via https:// or localhost.");
+        } else {
+          setError(err.message || "Failed to initialize the AI model or camera.");
+        }
       }
     };
 
