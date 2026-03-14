@@ -9,6 +9,7 @@ In this specific DOOH environment, viewers are a captive audience seated approxi
 *   **Dwell Time:** The total duration a person is physically present within the camera's field of view.
 *   **Attention Time:** The total duration a person actively maintains eye contact with the display.
 *   **Verified Impression:** A logged event indicating a user met the criteria for having truly "seen" the advertisement.
+*   **Unique Reach:** A count of the exact number of unique individual humans exposed to the ad, stripping out duplicate views from the same person.
 
 ## State Machine Rules
 
@@ -30,6 +31,12 @@ Because our screens are mounted in vehicles, a typical passenger's Dwell Session
 People naturally blink, look away momentarily due to distractions, or shift their weight. If the user breaks valid gaze during an active Impression Session, an invisible timer starts.
 *   If the user re-establishes a valid gaze within **1500 milliseconds**, the interruption is forgiven, and the active Impression Session continues seamlessly.
 *   If the Drop-Off Tolerance timer is exceeded, the active session terminates.
+
+### Rule 4: The Spatial Consistency Rule (Unique Reach)
+To measure true "Unique Reach," the system must distinguish between a new passenger entering the vehicle and the same passenger simply looking away for an extended period.
+*   **Spatial Anchoring:** When a face is detected, the AI extracts its spatial coordinate (the center of the face, e.g., the tip of the nose) mapped to a normalized $(x, y)$ grid.
+*   **The 15% Tolerance:** If a face disappears and reappears later, its new $(x, y)$ coordinate is compared against known historical locations for the current ride. If the distance is within **15% of the screen dimension**, the system assumes it is the *same captive passenger* shifting in their seat.
+*   **Result:** A new Impression may be logged (based on the Cooldown Rule), but the **Unique Reach** counter does *not* increment. If a face appears in a genuinely new spatial quadrant beyond the 15% tolerance, the Reach counter increases.
 
 ---
 

@@ -3,12 +3,15 @@
 import { useState } from "react";
 import FaceTracker from "../../components/ai/FaceTracker";
 import { useImpressionTracker } from "../../hooks/useImpressionTracker";
+import { useReachTracker } from "../../hooks/useReachTracker";
 
 export default function TrackingDemoPage() {
     const [facesDetected, setFacesDetected] = useState(0);
     const [isGazeValidated, setIsGazeValidated] = useState(false);
+    const [faceLandmarks, setFaceLandmarks] = useState<any[]>([]);
 
     const metrics = useImpressionTracker(facesDetected, isGazeValidated);
+    const reachCoords = useReachTracker(faceLandmarks);
 
     const formatTime = (ms: number) => {
         return (ms / 1000).toFixed(1) + "s";
@@ -35,7 +38,10 @@ export default function TrackingDemoPage() {
                                 width={800}
                                 height={600}
                                 showOverlay={true}
-                                onFaceDetected={(result) => setFacesDetected(result.faceLandmarks?.length || 0)}
+                                onFaceDetected={(result) => {
+                                    setFacesDetected(result.faceLandmarks?.length || 0);
+                                    if (result.faceLandmarks) setFaceLandmarks(result.faceLandmarks);
+                                }}
                                 onGazeChange={(isValidated) => setIsGazeValidated(isValidated)}
                             />
                         </div>
@@ -98,6 +104,12 @@ export default function TrackingDemoPage() {
                         <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-5 mt-2 flex flex-col items-center justify-center">
                             <span className="text-indigo-400 text-sm font-semibold uppercase tracking-wider mb-1">Total Verified Impressions</span>
                             <span className="text-5xl font-black text-white font-mono">{metrics.totalImpressions}</span>
+                        </div>
+
+                        {/* Unique Reach Highlight */}
+                        <div className="bg-gradient-to-br from-teal-500/10 to-emerald-500/10 border border-teal-500/20 rounded-xl p-5 mt-2 flex flex-col items-center justify-center">
+                            <span className="text-teal-400 text-sm font-semibold uppercase tracking-wider mb-1">Unique Viewers (Reach)</span>
+                            <span className="text-5xl font-black text-white font-mono">{reachCoords.uniqueReach}</span>
                         </div>
                         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
                             <div className="flex justify-between items-center py-2 border-b border-zinc-800">

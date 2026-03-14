@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import FaceTracker from "../../components/ai/FaceTracker";
 import { useImpressionTracker } from "../../hooks/useImpressionTracker";
+import { useReachTracker } from "../../hooks/useReachTracker";
 
 const ADS = [
     { src: "/demo-assets/main.mp4", label: "Main Feature Ad" },
@@ -15,11 +16,16 @@ const CAROUSEL_INTERVAL_MS = 5000;
 export default function CombinedDemoPage() {
     const [facesDetected, setFacesDetected] = useState(0);
     const [isGazeValidated, setIsGazeValidated] = useState(false);
+    const [faceLandmarks, setFaceLandmarks] = useState<any[]>([]);
 
     const metrics = useImpressionTracker(facesDetected, isGazeValidated);
+    const reachCoords = useReachTracker(faceLandmarks);
 
     const handleFaceDetected = useCallback((result: any) => {
         setFacesDetected(result.faceLandmarks?.length || 0);
+        if (result.faceLandmarks) {
+            setFaceLandmarks(result.faceLandmarks);
+        }
     }, []);
 
     const handleGazeChange = useCallback((isValidated: boolean) => {
@@ -209,10 +215,18 @@ export default function CombinedDemoPage() {
                                 </div>
                             </div>
 
-                            <div className="text-right">
-                                <p className="text-[10px] text-indigo-400 font-mono uppercase tracking-wider mb-1">Verified Impressions</p>
-                                <div className="text-2xl font-black text-white font-mono leading-none">
-                                    {metrics.totalImpressions}
+                            <div className="flex gap-6 items-center">
+                                <div className="text-right">
+                                    <p className="text-[10px] text-teal-400 font-mono uppercase tracking-wider mb-1">Unique Reach</p>
+                                    <div className="text-2xl font-black text-white font-mono leading-none">
+                                        {reachCoords.uniqueReach}
+                                    </div>
+                                </div>
+                                <div className="text-right border-l border-zinc-800 pl-6">
+                                    <p className="text-[10px] text-indigo-400 font-mono uppercase tracking-wider mb-1">Verified Impressions</p>
+                                    <div className="text-2xl font-black text-white font-mono leading-none">
+                                        {metrics.totalImpressions}
+                                    </div>
                                 </div>
                             </div>
                         </div>
