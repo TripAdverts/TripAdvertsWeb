@@ -2,41 +2,40 @@ import { useState, useEffect, useRef } from "react";
 
 export interface ImpressionMetrics {
     totalImpressions: number;
-    activeSession: boolean;
     currentDwellTime: number;
     currentAttentionTime: number;
-    status: "IDLE" | "VALIDATING" | "TRACKING" | "DROP_OFF_GRACE_PERIOD";
+    status: "IDLE" | "TRACKING";
 }
 
-const THRESHOLD_MS = 500;
-const DROP_OFF_TOLERANCE_MS = 1500;
-const COOLDOWN_PERIOD_MS = 10000; // 10 seconds
+const SPATIAL_TOLERANCE = 0.15;
 
 export function useImpressionTracker(
-    facesDetected: number,
-    isGazeValidated: boolean
+    faceLandmarksArray: any[],
+    isGazeValidated: boolean,
+    adSessionId: string
 ): ImpressionMetrics {
     const [totalImpressions, setTotalImpressions] = useState(0);
-    const [activeSession, setActiveSession] = useState(false);
     const [currentDwellTime, setCurrentDwellTime] = useState(0);
     const [currentAttentionTime, setCurrentAttentionTime] = useState(0);
     const [status, setStatus] = useState<ImpressionMetrics["status"]>("IDLE");
 
-    // Timers and Refs for exact millisecond tracking
+    // Refs for exact millisecond tracking
     const stateRef = useRef({
         status: "IDLE" as ImpressionMetrics["status"],
         dwellStart: 0,
         attentionStart: 0,
-        dropOffStart: 0,
         accumulatedAttention: 0,
-        hasActiveSession: false,
-        lastImpressionTime: 0,
     });
 
-    const inputsRef = useRef({ facesDetected, isGazeValidated });
+    const inputsRef = useRef({ faceLandmarksArray, isGazeValidated, adSessionId });
+    
+    // Spatial memory restricted to the current ad session
+    const activeAdSessionRef = useRef(adSessionId);
+    const countedFacesInSessionRef = useRef<{ x: number, y: number }[]>([]);
+
     useEffect(() => {
-        inputsRef.current = { facesDetected, isGazeValidated };
-    }, [facesDetected, isGazeValidated]);
+        inputsRef.current = { faceLandmarksArray, isGazeValidated, adSessionId };
+    }, [faceLandmarksArray, isGazeValidated, adSessionId]);
 
     const lastUpdateRef = useRef(Date.now());
 
@@ -48,97 +47,85 @@ export function useImpressionTracker(
             const st = stateRef.current;
             const inputs = inputsRef.current;
 
-            // 1. Determine base state from props
-            const isPresent = inputs.facesDetected > 0;
+            // 1. Detect Ad Session boundaries to wipe impression spatial memory
+            if (inputs.adSessionId !== activeAdSessionRef.current) {
+                activeAdSessionRef.current = inputs.adSessionId;
+                countedFacesInSessionRef.current = []; // Wipe memory for new ad loop!
+            }
+
+            // 2. Impression Logic (Triggered purely by Face Presence + Spatial Consistency per session)
+            const faces = inputs.faceLandmarksArray || [];
+            if (faces.length > 0) {
+                let newImpressionsThisFrame = 0;
+
+                faces.forEach((landmarks) => {
+                    const nose = landmarks[1];
+                    if (!nose) return;
+
+                    let isAlreadyCounted = false;
+                    for (const counted of countedFacesInSessionRef.current) {
+                        const distance = Math.sqrt(
+                            Math.pow(counted.x - nose.x, 2) + Math.pow(counted.y - nose.y, 2)
+                        );
+                        if (distance <= SPATIAL_TOLERANCE) {
+                            isAlreadyCounted = true;
+                            // Gently ease coordinates to account for slight shifting
+                            counted.x = (counted.x * 0.8) + (nose.x * 0.2);
+                            counted.y = (counted.y * 0.8) + (nose.y * 0.2);
+                            break;
+                        }
+                    }
+
+                    if (!isAlreadyCounted) {
+                        // Found a "new" face during this Ad Session! Log an impression!
+                        countedFacesInSessionRef.current.push({ x: nose.x, y: nose.y });
+                        newImpressionsThisFrame++;
+                    }
+                });
+
+                if (newImpressionsThisFrame > 0) {
+                    setTotalImpressions(prev => prev + newImpressionsThisFrame);
+                }
+            }
+
+            // 3. Telemetry Logic (Dwell & Attention happen regardless of impressions)
+            const isPresent = faces.length > 0;
             const isLooking = inputs.isGazeValidated;
 
-            // 2. Handle State Machine Transitions
             if (!isPresent) {
-                // Complete reset if face is lost
                 st.status = "IDLE";
                 st.dwellStart = 0;
                 st.attentionStart = 0;
-                st.dropOffStart = 0;
                 st.accumulatedAttention = 0;
-                st.hasActiveSession = false;
-                st.lastImpressionTime = 0;
             } else {
-                // Face is present, meaning Dwell Time is accumulating
                 if (st.dwellStart === 0) st.dwellStart = now;
 
-                if (st.status === "IDLE") {
-                    if (isLooking) {
-                        st.status = "VALIDATING";
+                if (isLooking) {
+                    if (st.status === "IDLE") {
+                        st.status = "TRACKING";
                         st.attentionStart = now;
                     }
-                }
-                else if (st.status === "VALIDATING") {
-                    if (isLooking) {
-                        const continuousLook = now - st.attentionStart;
-                        if (continuousLook >= THRESHOLD_MS) {
-                            st.status = "TRACKING";
-                            st.hasActiveSession = true;
-
-                            // Upfront Logging & Time-Based Cooldown Rule: 
-                            // Because viewers are seated for long durations (ride-share), 
-                            // we log an impression instantly, but enforce a 10-second cooldown 
-                            // before the *same person* can trigger another one.
-                            if (now - st.lastImpressionTime > COOLDOWN_PERIOD_MS) {
-                                setTotalImpressions(prev => prev + 1);
-                                st.lastImpressionTime = now;
-                            }
-                        }
-                    } else {
-                        // Failed validation threshold, reset
+                } else {
+                    if (st.status === "TRACKING") {
+                        st.accumulatedAttention += (now - st.attentionStart);
                         st.status = "IDLE";
                         st.attentionStart = 0;
                     }
                 }
-                else if (st.status === "TRACKING") {
-                    if (!isLooking) {
-                        st.status = "DROP_OFF_GRACE_PERIOD";
-                        st.dropOffStart = now;
-                        // lock in the attention time so far
-                        st.accumulatedAttention += (now - st.attentionStart);
-                        st.attentionStart = 0;
-                    }
-                }
-                else if (st.status === "DROP_OFF_GRACE_PERIOD") {
-                    if (isLooking) {
-                        // Recovered within grace period
-                        st.status = "TRACKING";
-                        st.attentionStart = now;
-                        st.dropOffStart = 0;
-                    } else {
-                        const dropOffDuration = now - st.dropOffStart;
-                        if (dropOffDuration > DROP_OFF_TOLERANCE_MS) {
-                            // Session failed to recover. We do NOT log the impression here anymore, 
-                            // because it was already logged upfront. We just tear down the session tracking 
-                            // while keeping them in the same Dwell context.
-                            st.status = "IDLE";
-                            st.hasActiveSession = false;
-                            st.dwellStart = now; // Restart dwell for the still-present face
-                            st.accumulatedAttention = 0;
-                        }
-                    }
-                }
             }
 
-            // 3. Update active timers for UI rendering
+            // 4. Update UI Timers
             let displayDwell = 0;
             let displayAttention = st.accumulatedAttention;
 
             if (st.dwellStart > 0) {
                 displayDwell = now - st.dwellStart;
             }
-
-            if (st.status === "VALIDATING" || st.status === "TRACKING") {
+            if (st.status === "TRACKING") {
                 displayAttention += (now - st.attentionStart);
             }
 
-            // Throttle UI updates slightly to prevent excessive React renders
-            if (now - lastUpdateRef.current > 50) { // ~20fps UI updates
-                setActiveSession(st.hasActiveSession);
+            if (now - lastUpdateRef.current > 100) { // ~10fps UI updates
                 setStatus(st.status);
                 setCurrentDwellTime(displayDwell);
                 setCurrentAttentionTime(displayAttention);
@@ -153,11 +140,10 @@ export function useImpressionTracker(
         return () => {
             cancelAnimationFrame(animationFrameId);
         };
-    }, []); // Run loop once on mount, reading from refs
+    }, []); 
 
     return {
         totalImpressions,
-        activeSession,
         currentDwellTime,
         currentAttentionTime,
         status,

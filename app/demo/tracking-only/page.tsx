@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FaceTracker from "../../components/ai/FaceTracker";
 import { useImpressionTracker } from "../../hooks/useImpressionTracker";
 import { useReachTracker } from "../../hooks/useReachTracker";
@@ -9,8 +9,18 @@ export default function TrackingDemoPage() {
     const [facesDetected, setFacesDetected] = useState(0);
     const [isGazeValidated, setIsGazeValidated] = useState(false);
     const [faceLandmarks, setFaceLandmarks] = useState<any[]>([]);
+    const [cycleCount, setCycleCount] = useState(0);
 
-    const metrics = useImpressionTracker(facesDetected, isGazeValidated);
+    const adSessionId = `simulated-${cycleCount}`;
+
+    useEffect(() => {
+        const id = setInterval(() => {
+            setCycleCount(c => c + 1);
+        }, 10000); // Simulate new ad every 10 seconds
+        return () => clearInterval(id);
+    }, []);
+
+    const metrics = useImpressionTracker(faceLandmarks, isGazeValidated, adSessionId);
     const reachCoords = useReachTracker(faceLandmarks);
 
     const formatTime = (ms: number) => {
@@ -77,16 +87,14 @@ export default function TrackingDemoPage() {
                                     <div className="flex justify-between items-center py-1">
                                         <span className="text-zinc-400 text-sm">State</span>
                                         <span className={`font-mono text-xs font-bold px-1.5 py-0.5 rounded ${metrics.status === 'IDLE' ? 'bg-zinc-800 text-zinc-500' :
-                                            metrics.status === 'VALIDATING' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                metrics.status === 'DROP_OFF_GRACE_PERIOD' ? 'bg-orange-500/20 text-orange-400' :
                                                     'bg-green-500/20 text-green-400'
                                             }`}>
                                             {metrics.status}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center py-1">
-                                        <span className="text-zinc-400 text-sm">Active Session</span>
-                                        <span className={`font-mono text-sm ${metrics.activeSession ? 'text-green-400' : 'text-zinc-500'}`}>{metrics.activeSession ? "YES" : "NO"}</span>
+                                        <span className="text-zinc-400 text-sm">Ad Session ID</span>
+                                        <span className={`font-mono text-sm text-zinc-300`}>{adSessionId}</span>
                                     </div>
                                     <div className="flex justify-between items-center py-1">
                                         <span className="text-zinc-400 text-sm">Dwell Time</span>

@@ -18,7 +18,13 @@ export default function CombinedDemoPage() {
     const [isGazeValidated, setIsGazeValidated] = useState(false);
     const [faceLandmarks, setFaceLandmarks] = useState<any[]>([]);
 
-    const metrics = useImpressionTracker(facesDetected, isGazeValidated);
+    const [layout, setLayout] = useState<'sidebar' | 'grid' | 'carousel'>('sidebar');
+    const [activeAd, setActiveAd] = useState(0);
+    const [cycleCount, setCycleCount] = useState(0);
+
+    const adSessionId = layout === 'carousel' ? `carousel-${activeAd}` : `${layout}-${cycleCount}`;
+
+    const metrics = useImpressionTracker(faceLandmarks, isGazeValidated, adSessionId);
     const reachCoords = useReachTracker(faceLandmarks);
 
     const handleFaceDetected = useCallback((result: any) => {
@@ -35,8 +41,6 @@ export default function CombinedDemoPage() {
     const formatTime = (ms: number) => {
         return (ms / 1000).toFixed(1) + "s";
     };
-    const [layout, setLayout] = useState<'sidebar' | 'grid' | 'carousel'>('sidebar');
-    const [activeAd, setActiveAd] = useState(0);
 
     useEffect(() => {
         if (layout !== 'carousel') return;
@@ -120,7 +124,7 @@ export default function CombinedDemoPage() {
                                             <>
                                                 {/* Main Feature Ad (75% width, 16:9) */}
                                                 <div className="col-span-3 bg-black rounded-lg overflow-hidden relative border border-white/5 shadow-2xl">
-                                                    <video src="/demo-assets/main.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                                                    <video src="/demo-assets/main.mp4" autoPlay muted playsInline className="w-full h-full object-cover" onEnded={(e) => { e.currentTarget.play(); setCycleCount(c => c + 1); }} />
                                                     <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-[10px] px-2 py-1 rounded text-white font-mono uppercase tracking-widest border border-white/10 shadow-lg">Main Feature Ad</div>
                                                 </div>
 
@@ -161,7 +165,7 @@ export default function CombinedDemoPage() {
 
                                                 {/* Main Ad */}
                                                 <div className="col-span-4 row-span-4 bg-black rounded-lg overflow-hidden relative border border-white/5 shadow-2xl">
-                                                    <video src="/demo-assets/main.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                                                    <video src="/demo-assets/main.mp4" autoPlay muted playsInline className="w-full h-full object-cover" onEnded={(e) => { e.currentTarget.play(); setCycleCount(c => c + 1); }} />
                                                     <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-[10px] px-2 py-1 rounded text-white font-mono uppercase tracking-widest border border-white/10 shadow-lg">Main Feature Ad</div>
                                                 </div>
 
@@ -200,6 +204,12 @@ export default function CombinedDemoPage() {
                                             {facesDetected === 0 ? 'NO FACE' : isGazeValidated ? 'VALIDATED' : 'TRACKING LOST'}
                                         </span>
                                     </div>
+                                </div>
+                                <div className="border-l border-zinc-800 pl-6 w-38">
+                                    <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Ad Session ID</p>
+                                    <span className="text-sm font-mono font-bold text-zinc-300">
+                                        {adSessionId}
+                                    </span>
                                 </div>
                                 <div className="border-l border-zinc-800 pl-6 w-32">
                                     <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Dwell Time</p>
