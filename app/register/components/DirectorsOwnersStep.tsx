@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { ownerRoleOptions, type RegisterFormValues } from "@/lib/schemas";
 import { createOwnerEntry, type RegisterStepProps } from "./register-config";
+import styles from "../register-theme.module.css";
 
 export function DirectorsOwnersStep({
   isFirstStep,
@@ -83,8 +84,9 @@ export function DirectorsOwnersStep({
     0,
   );
   const selectedSignatoryId =
-    owners.fields[watchedOwners.findIndex((owner) => owner?.isAuthorizedSignatory)]
-      ?.id ?? "";
+    owners.fields[
+      watchedOwners.findIndex((owner) => owner?.isAuthorizedSignatory)
+    ]?.id ?? "";
   const ownersErrorMessage =
     !Array.isArray(errors.owners) && typeof errors.owners?.message === "string"
       ? errors.owners.message
@@ -129,118 +131,118 @@ export function DirectorsOwnersStep({
             key={owner.id}
             className="relative space-y-4 rounded-xl border border-border bg-muted/20 p-5"
           >
-              <div className="mb-2 flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-foreground">
-                    Person {index + 1}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Director or beneficial owner details.
-                  </p>
-                </div>
-                {owners.fields.length > 1 ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    className="text-red-500 hover:bg-red-50 hover:text-red-700"
-                    onClick={() => owners.remove(index)}
-                  >
-                    <Trash2 className="size-4" />
-                    <span className="sr-only">Remove person {index + 1}</span>
-                  </Button>
-                ) : null}
+            <div className="mb-2 flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-foreground">
+                  Person {index + 1}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Director or beneficial owner details.
+                </p>
               </div>
+              {owners.fields.length > 1 ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-red-500 hover:bg-red-50 hover:text-red-700"
+                  onClick={() => owners.remove(index)}
+                >
+                  <Trash2 className="size-4" />
+                  <span className="sr-only">Remove person {index + 1}</span>
+                </Button>
+              ) : null}
+            </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <FormField
-                  control={control}
-                  name={`owners.${index}.fullName`}
-                  render={({ field }) => (
-                    <FormItem className="space-y-2 md:col-span-2">
-                      <FormLabel>Full Name</FormLabel>
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                control={control}
+                name={`owners.${index}.fullName`}
+                render={({ field }) => (
+                  <FormItem className="space-y-2 md:col-span-2">
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Jane Smith" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`owners.${index}.nationality`}
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Nationality</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. Ghanaian" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`owners.${index}.dateOfBirth`}
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`owners.${index}.role`}
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Role</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || undefined}
+                    >
                       <FormControl>
-                        <Input placeholder="Jane Smith" {...field} />
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name={`owners.${index}.nationality`}
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Nationality</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. Ghanaian" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name={`owners.${index}.dateOfBirth`}
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Date of Birth</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name={`owners.${index}.role`}
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Role</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value || undefined}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {ownerRoleOptions.map((role) => (
-                            <SelectItem key={role} value={role}>
-                              {role}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name={`owners.${index}.ownershipPercent`}
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Ownership Percentage (%)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="100"
-                          step="0.01"
-                          inputMode="decimal"
-                          placeholder="0 - 100"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                      <SelectContent className={styles.selectContent}>
+                        {ownerRoleOptions.map((role) => (
+                          <SelectItem key={role} value={role}>
+                            {role}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`owners.${index}.ownershipPercent`}
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Ownership Percentage (%)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        inputMode="decimal"
+                        placeholder="0 - 100"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         ))}
 
@@ -283,7 +285,8 @@ export function DirectorsOwnersStep({
             ))}
           </RadioGroup>
           {ownersErrorMessage &&
-          ownersErrorMessage !== "Total ownership percentage cannot exceed 100%." ? (
+          ownersErrorMessage !==
+            "Total ownership percentage cannot exceed 100%." ? (
             <p className="text-sm text-destructive">{ownersErrorMessage}</p>
           ) : null}
         </div>

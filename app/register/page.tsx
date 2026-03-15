@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentType,
+} from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -29,9 +35,12 @@ import {
   type RegisterStepId,
   type RegisterStepProps,
 } from "./components/register-config";
+import styles from "./register-theme.module.css";
 
 type RegisterStepDefinition = {
-  Component: ComponentType<RegisterStepProps> | ComponentType<{ isValid: boolean }>;
+  Component:
+    | ComponentType<RegisterStepProps>
+    | ComponentType<{ isValid: boolean }>;
   id: RegisterStepId;
   schema:
     | typeof step1Schema
@@ -137,6 +146,22 @@ export default function RegisterPage() {
   }, [currentStepIndex]);
 
   useEffect(() => {
+    const { body } = document;
+    const previousTheme = body.dataset.registerTheme;
+
+    body.dataset.registerTheme = "customer-registration";
+
+    return () => {
+      if (previousTheme) {
+        body.dataset.registerTheme = previousTheme;
+        return;
+      }
+
+      delete body.dataset.registerTheme;
+    };
+  }, []);
+
+  useEffect(() => {
     void form.trigger();
   }, [activeSteps.length, currentStepIndex, form]);
 
@@ -172,14 +197,20 @@ export default function RegisterPage() {
   const CurrentStepComponent = currentStep.Component;
 
   return (
-    <section className="min-h-screen bg-background text-foreground flex flex-col items-center py-6 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section
+      className={`${styles.shell} min-h-screen bg-background text-foreground flex flex-col items-center py-6 px-4 sm:px-6 lg:px-8 overflow-hidden`}
+    >
       <RegisterProgress
         currentStepIndex={currentStepIndex}
         steps={activeSteps}
       />
 
-      <Card className="w-full max-w-5xl rounded-2xl border border-border shadow-2xl overflow-hidden bg-card flex flex-col min-h-0">
-        <CardHeader className="space-y-2 border-b border-border/60">
+      <Card
+        className={`${styles.panel} w-full max-w-5xl rounded-2xl border border-border shadow-2xl overflow-hidden bg-card flex flex-col min-h-0`}
+      >
+        <CardHeader
+          className={`${styles.header} space-y-2 border-b border-border/60`}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">

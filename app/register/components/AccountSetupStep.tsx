@@ -18,6 +18,7 @@ import {
   countryOptions,
   type RegisterFormValues,
 } from "@/lib/schemas";
+import styles from "../register-theme.module.css";
 
 type AccountSetupStepProps = {
   isValid: boolean;
@@ -58,7 +59,7 @@ export function AccountSetupStep({ isValid }: AccountSetupStepProps) {
                   >
                     <SelectValue placeholder="Select your country" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className={styles.selectContent}>
                     {countryOptions.map((country) => (
                       <SelectItem
                         key={country}
@@ -146,8 +147,8 @@ export function AccountSetupStep({ isValid }: AccountSetupStepProps) {
                             Registered Business
                           </div>
                           <p className="text-sm font-normal text-muted-foreground leading-snug">
-                            I am registering an incorporated entity or officially
-                            registered business.
+                            I am registering an incorporated entity or
+                            officially registered business.
                           </p>
                         </div>
                       </div>

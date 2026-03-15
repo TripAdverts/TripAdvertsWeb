@@ -1,0 +1,148 @@
+.shell {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at top left, color-mix(in oklab, var(--primary) 20%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at top right, color-mix(in oklab, var(--accent) 80%, white) 0%, transparent 32%),
+    linear-gradient(180deg, oklch(0.992 0.004 179.8) 0%, oklch(0.978 0.01 179.8) 46%, oklch(0.968 0.012 179.8) 100%);
+}
+
+.shell::before,
+.shell::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(64px);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shell::before {
+  top: 3rem;
+  left: -2rem;
+  width: 14rem;
+  height: 14rem;
+  background: color-mix(in oklab, var(--primary) 24%, transparent);
+}
+
+.shell::after {
+  right: -3rem;
+  bottom: 3rem;
+  width: 18rem;
+  height: 18rem;
+  background: color-mix(in oklab, var(--accent) 92%, white);
+}
+
+.panel {
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--card) 88%, white) 0%, var(--card) 100%);
+  border-color: var(--register-border-strong);
+  box-shadow:
+    0 24px 70px rgba(15, 23, 42, 0.08),
+    0 8px 24px rgba(45, 212, 191, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.header {
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--primary) 8%, white) 0%, color-mix(in oklab, var(--card) 100%, white) 100%);
+}
+
+.selectContent {
+  border-color: var(--register-border-strong);
+  background: color-mix(in oklab, var(--card) 96%, white);
+  color: var(--foreground);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.14);
+}
+
+.selectContent :global([data-slot="select-item"][data-highlighted]) {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.selectContent :global([data-slot="select-item"][data-state="checked"]) {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+:global(body[data-register-theme="customer-registration"]) {
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.72 0.073 179.8);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.965 0.008 179.8);
+  --secondary-foreground: oklch(0.3 0.04 179.8);
+  --muted: oklch(0.965 0.005 179.8);
+  --muted-foreground: oklch(0.5 0 0);
+  --accent: oklch(0.94 0.015 179.8);
+  --accent-foreground: oklch(0.25 0.03 179.8);
+  --border: oklch(0.91 0.005 179.8);
+  --input: oklch(0.91 0.005 179.8);
+  --ring: oklch(0.72 0.073 179.8);
+  --register-border-strong: color-mix(in oklab, var(--primary) 18%, var(--border));
+}
+
+.shell :global([data-slot="card"]) {
+  border-color: color-mix(in oklab, var(--primary) 10%, var(--border));
+}
+
+.shell :global([data-slot="input"]),
+.shell :global([data-slot="textarea"]) {
+  background: color-mix(in oklab, var(--primary) 4%, white);
+  border-color: color-mix(in oklab, var(--primary) 12%, var(--border));
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.shell :global([data-slot="select-trigger"]),
+.shell :global([data-slot="input"][type="date"]) {
+  background: color-mix(in oklab, var(--primary) 8%, white);
+  border-color: color-mix(in oklab, var(--primary) 15%, var(--border));
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.shell :global([data-slot="input"]:focus-visible),
+.shell :global([data-slot="textarea"]:focus-visible),
+.shell :global([data-slot="select-trigger"]:focus-visible) {
+  border-color: color-mix(in oklab, var(--primary) 48%, var(--border));
+}
+
+.shell :global([role="button"][aria-controls]) {
+  background: color-mix(in oklab, var(--primary) 6%, white);
+  border-color: color-mix(in oklab, var(--primary) 14%, var(--border));
+}
+
+.shell :global([data-slot="button"][data-variant="outline"]) {
+  border-color: color-mix(in oklab, var(--primary) 14%, var(--border));
+  background: color-mix(in oklab, var(--card) 96%, white);
+}
+
+.shell :global([data-slot="button"][data-variant="outline"]:hover) {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.shell :global([data-slot="button"][data-variant="ghost"]) {
+  color: color-mix(in oklab, var(--foreground) 85%, var(--primary));
+}
+
+.shell :global([data-slot="button"][data-variant="ghost"]:hover) {
+  background: color-mix(in oklab, var(--primary) 10%, white);
+  color: var(--foreground);
+}
+
+@media (max-width: 640px) {
+  .shell::before {
+    top: 1.5rem;
+    left: -4rem;
+  }
+
+  .shell::after {
+    right: -5rem;
+    bottom: 1rem;
+  }
+}

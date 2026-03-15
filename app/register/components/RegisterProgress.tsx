@@ -16,7 +16,7 @@ export function RegisterProgress({
   return (
     <div className="w-full max-w-5xl mb-6 shrink-0">
       <div className="flex items-center justify-between relative">
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-border -z-10" />
+        <div className="absolute left-0 top-8 -translate-y-1/2 w-full h-0.5 -z-10" />
         {steps.map((step, index) => {
           const isActive = index === currentStepIndex;
           const isCompleted = index < currentStepIndex;

@@ -27,6 +27,7 @@ import {
   type CountryOption,
   type RegisterStepProps,
 } from "./register-config";
+import styles from "../register-theme.module.css";
 
 export function BusinessKybStep({
   isFirstStep,
@@ -61,7 +62,9 @@ export function BusinessKybStep({
             name="businessRegistration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{selectedBusinessConfig.registrationLabel}</FormLabel>
+                <FormLabel>
+                  {selectedBusinessConfig.registrationLabel}
+                </FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -70,7 +73,7 @@ export function BusinessKybStep({
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className={styles.selectContent}>
                       {incorporationStateOptions.map((state) => (
                         <SelectItem key={state.value} value={state.value}>
                           {state.label}
@@ -88,7 +91,9 @@ export function BusinessKybStep({
             name="businessRegistration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{selectedBusinessConfig.registrationLabel}</FormLabel>
+                <FormLabel>
+                  {selectedBusinessConfig.registrationLabel}
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={selectedBusinessConfig.registrationPlaceholder}
@@ -210,7 +215,7 @@ export function BusinessKybStep({
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select business type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className={styles.selectContent}>
                     {businessTypeOptions.map((option: string) => (
                       <SelectItem key={option} value={option}>
                         {option}
@@ -240,7 +245,9 @@ export function BusinessKybStep({
         />
 
         <div className="md:col-span-2 space-y-4 pt-4 border-t border-border">
-          <h3 className="font-semibold text-foreground">Registration Details</h3>
+          <h3 className="font-semibold text-foreground">
+            Registration Details
+          </h3>
           <div className="grid md:grid-cols-2 gap-4">
             {renderCountrySpecificBusinessFields()}
           </div>
